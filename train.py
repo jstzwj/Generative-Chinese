@@ -27,8 +27,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--device', default='0,1,2,3', type=str, required=False, help='设置使用哪些显卡')
     parser.add_argument('--raw_data_path', default='data/train.txt', type=str, required=False, help='原始训练语料')
-    parser.add_argument('--num_pieces', default=100, type=int, required=False, help='将训练语料分成多少份')
-    parser.add_argument('--min_length', default=128, type=int, required=False, help='最短收录文章长度')
     parser.add_argument('--output_dir', default='model/', type=str, required=False, help='模型输出路径')
     parser.add_argument('--batch_size', default=2, type=int, required=False, help='模型训练batch大小')
     parser.add_argument('--lr', default=1.5e-4, type=float, required=False, help='学习率')
@@ -42,8 +40,6 @@ def main():
     print('using device:', device)
 
     raw_data_path = args.raw_data_path
-    num_pieces = args.num_pieces
-    min_length = args.min_length
     output_dir = args.output_dir
     batch_size = args.batch_size
     lr = args.lr
@@ -92,6 +88,14 @@ def main():
             # print
             print(f'now time: {datetime.now().strftime("%H:%M")}. \
                 Step {i} of epoch {epoch}, loss {loss.item()}')
+
+        # save model
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
+        output_epoch_dir = os.path.join(output_dir, f'epoch_{str(epoch)}')
+        if not os.path.exists(output_epoch_dir):
+            os.mkdir(output_epoch_dir)
+        torch.save(model.state_dict(), os.path.join(output_epoch_dir, 'model.pth'))
 
 if __name__ == "__main__":
     main()

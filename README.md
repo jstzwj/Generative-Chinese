@@ -1,3 +1,3 @@
 
-GPT-2 Chinese
+GPT-2 for Multiple Languages
 ====
